@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TNSTC - Trichy</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#16344a;background:#f3f8fb}
+.screen{min-height:100vh}.hidden{display:none!important}
+#welcome{min-height:100vh;background:linear-gradient(130deg,#062a48,#087fb9);color:white;display:grid;place-items:center;text-align:center;padding:30px}
+.welcome-box{max-width:760px; width: 100%;}
+.bus{font-size:65px}
+.welcome-box h1{font-size:clamp(42px,7vw,76px);margin:15px 0}
+.welcome-box p{font-size:20px;line-height:1.6;color:#d7effa}
+.primary{border:0;background:#f49a22;color:white;border-radius:7px;padding:15px 25px;font-weight:bold;font-size:15px;cursor:pointer}
+.search-widget{background:rgba(255,255,255,0.1); padding:25px; border-radius:12px; margin-top:30px; border: 1px solid rgba(255,255,255,0.2);}
+.search-widget input{padding:14px; border:none; border-radius:6px; margin:5px; width:calc(50% - 15px); min-width:200px; font-size:14px;}
+.skip-link{display:block; margin-top:20px; color:#a9d8f1; text-decoration:none; font-size:14px;}
+.skip-link:hover{color:#fff;}
+.app{display:flex;min-height:100vh}
+aside{width:245px;background:#082f4b;color:#dbeefa;padding:25px 15px;position:fixed;inset:0 auto 0 0; overflow-y:auto;}
+.brand{font-size:20px;font-weight:bold;color:white;padding:0 10px 29px}
+.brand small{display:block;font-size:11px;color:#83bfdc;margin-top:5px}
+.menu{font-size:10px;color:#7eb5cf;font-weight:bold;letter-spacing:1.2px;padding:12px}
+.nav{display:block;color:#dbeefa;text-decoration:none;padding:13px;border-radius:7px;margin:3px 0;font-size:14px; transition: background 0.2s;}
+.nav:hover,.nav.active{background:#0c577f;color:white}
+.nav-group { margin-bottom: 5px; }
+.dropdown-content { background: #052238; border-radius: 7px; margin-top: 3px; overflow: hidden; }
+.sub-nav { padding-left: 35px; font-size: 13px; margin: 0; border-radius: 0; }
+.caret { float: right; transition: transform 0.3s; font-size: 10px; line-height: 20px;}
+.dropdown-open .caret { transform: rotate(180deg); }
+.status{margin-top:30px; background:#0c496b; padding:13px; border-radius:8px; font-size:12px; line-height:1.6}
+.dot{color:#55e69a}
+main{margin-left:245px;width:calc(100% - 245px);padding:35px 5%}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.top h1{margin:0;color:#082f4b}.top p{color:#6d8594}
+.account{background:white;border-radius:7px;padding:10px 13px;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.card,.panel{background:white;border-radius:10px;padding:21px;box-shadow:0 4px 18px #173a5012}
+.card span{font-size:13px;color:#6b8190}
+.card b{display:block;font-size:29px;margin-top:8px;color:#087fbb}
+.content{margin-top:24px}
+.panel h2{color:#082f4b;margin:0 0 7px}
+.panel h3{color:#087fbb;font-size:16px;margin:28px 0 5px}
+.panel p{color:#6d8594;font-size:13px;margin:0 0 19px}
+.route{padding:15px 0;border-bottom:1px solid #e6eef2}
+.route:last-child{border:0}.route b{color:#082f4b;font-size:15px; display:block; margin-bottom:4px;}
+.route small{display:block;color:#738794;margin-top:4px;line-height:1.5}
+.bus-type{display:inline-block;background:#e5f3fb;color:#087fbb;padding:4px 8px;border-radius:15px;margin-top:7px;font-size:11px;font-weight:bold}
+.eta{float:right;background:#dff6e8;color:#167547;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold; margin-left: 10px;}
+.auth{max-width:440px;margin:30px auto}
+.form-panel{background:white;border-radius:10px;padding:30px;box-shadow:0 4px 18px #173a5012}
+.form-panel input{width:100%;padding:13px;border:1px solid #cbdbe3;border-radius:6px;margin:7px 0 12px}
+.form-panel label{font-size:13px;font-weight:bold}
+.message{font-size:13px;min-height:20px; margin-bottom: 10px;}
+.link{color:#087fbb;cursor:pointer;font-weight:bold}
+.btn-loader { opacity: 0.7; cursor: not-allowed; }
+@media(max-width:750px){
+aside{width:68px;padding:22px 8px}.brand{font-size:0;text-align:center;padding-bottom:24px}
+.brand:before{content:"🚌";font-size:26px}.brand small,.menu,.nav span,.status, .caret{display:none}
+.nav{text-align:center;padding:14px 2px} .sub-nav { padding-left: 2px; }
+main{margin-left:68px;width:calc(100% - 68px);padding:25px 17px}
+.cards{grid-template-columns:1fr}.account{display:none}
+.search-widget input {width: 100%; margin: 5px 0;}
+}
+</style>
+</head>
+
+<body>
+
+<section id="welcome">
+<div class="welcome-box">
+<div class="bus">🚌</div>
+<h1>TNSTC - Trichy</h1>
+<p style="font-size:15px">Live bus updates, route timings and reliable travel information for Tiruchirapalli.</p>
+
+<div class="search-widget">
+    <h3 style="margin-top:0; font-size:18px; color:white;">Find Your Route</h3>
+    <div>
+        <input type="text" id="searchFrom" placeholder="From (e.g. Trichy)">
+        <input type="text" id="searchTo" placeholder="To (e.g. Chennai)">
+    </div>
+    <button class="primary" style="margin-top: 15px; width:100%; max-width: 410px;" onclick="performSearch()">Search Buses →</button>
+</div>
+
+<a href="#" class="skip-link" onclick="showPage('home')">Skip to full dashboard</a>
+</div>
+</section>
+
+<section id="dashboard" class="screen hidden">
+<div class="app">
+
+<aside>
+<div class="brand">TNSTC - Trichy<small>Smart Bus Tracking</small></div>
+
+<div class="menu">DASHBOARD</div>
+<a class="nav active" href="#" onclick="showPage('home')" data-target="home">⌂ <span>Home</span></a>
+<a class="nav" href="#" onclick="showPage('search-results')" id="nav-search" data-target="search-results" class="hidden">🔍 <span>Search Results</span></a>
+<a class="nav" href="#" onclick="showPage('map')" data-target="map">◉ <span>Live GPS Map</span></a>
+<a class="nav" href="#" onclick="showPage('timings')" data-target="timings">◷ <span>Bus Timings</span></a>
+
+<div class="nav-group">
+    <a class="nav" href="#" onclick="toggleDropdown(event, 'routesDropdown')">⌁ <span>Routes</span> <span class="caret">▼</span></a>
+    <div id="routesDropdown" class="dropdown-content hidden">
+        <a class="nav sub-nav" href="#" onclick="showPage('main-routes')" data-target="main-routes">Main routes</a>
+        <a class="nav sub-nav" href="#" onclick="showPage('local-routes')" data-target="local-routes">Local routes</a>
+    </div>
+</div>
+
+<div class="menu">ACCOUNT</div>
+<a class="nav" href="#" onclick="showPage('login')" data-target="login">⇥ <span>Login</span></a>
+<a class="nav" href="#" onclick="showPage('register')" data-target="register">＋ <span>Register</span></a>
+
+<div class="status">
+<span class="dot">●</span> GPS system active<br>
+Main & Local routes live
+</div>
+</aside>
+
+<main>
+<div class="top">
+<div>
+<h1 id="title">Home dashboard</h1>
+<p id="subtitle">Travel information for Tiruchirapalli.</p>
+</div>
+<div class="account" id="account">👤 Guest user</div>
+</div>
+
+<div id="home" class="page">
+<div class="cards">
+<div class="card"><span>Main routes</span><b id="mainRouteCount">0</b></div>
+<div class="card"><span>Local routes</span><b id="localRouteCount">0</b></div>
+<div class="card"><span>Frequency tracking</span><b style="color:#f49a22">Active</b></div>
+</div>
+
+<div class="panel content">
+<h2>Welcome to TNSTC - Trichy</h2>
+<p>Check main and local bus timings, routes and live GPS locations.</p>
+<button class="primary" onclick="showPage('timings')">View bus timings</button>
+</div>
+</div>
+
+<!-- Search Results Page -->
+<div id="search-results" class="page hidden">
+<div class="panel">
+<h2 id="searchTitle">Search Results</h2>
+<p id="searchSubtitle">Showing available buses matching your query.</p>
+<div id="searchResultsList"></div>
+<button class="primary" style="margin-top: 20px; background: #6d8594;" onclick="document.getElementById('welcome').classList.remove('hidden'); document.getElementById('dashboard').classList.add('hidden');">← Search Again</button>
+</div>
+</div>
+
+<div id="mapPage" class="page hidden">
+<div class="panel">
+<h2>Live GPS bus tracking</h2>
+<p>Live area view of Tiruchirapalli via Google Maps.</p>
+<!-- Embedded Google Maps Iframe -->
+<iframe 
+  src="https://maps.google.com/maps?q=Tiruchirappalli&t=&z=12&ie=UTF8&iwloc=&output=embed" 
+  width="100%" 
+  height="450" 
+  style="border:0; border-radius: 8px;" 
+  allowfullscreen="" 
+  loading="lazy">
+</iframe>
+</div>
+</div>
+
+<div id="timings" class="page hidden">
+<div class="panel">
+<h2>Bus timings from Tiruchirapalli</h2>
+<p>Main and local TNSTC service information.</p>
+
+<h3>Main bus timings</h3>
+<div id="mainTimingsView"></div>
+
+<h3 style="margin-top: 40px;">Local bus timings</h3>
+<div id="localTimingsView"></div>
+</div>
+</div>
+
+<div id="main-routes" class="page hidden">
+<div class="panel">
+<h2>Main Routes Directory</h2>
+<p>Comprehensive list of main routes originating from or passing through Trichy.</p>
+<div id="mainRoutesList"></div>
+</div>
+</div>
+
+<div id="local-routes" class="page hidden">
+<div class="panel">
+<h2>Local Routes Directory</h2>
+<p>Urban and suburban transit routes within Trichy.</p>
+<div id="localRoutesList"></div>
+</div>
+</div>
+
+<div id="login" class="page hidden">
+<div class="auth form-panel">
+<h2>Login</h2>
+<p>Access your saved routes.</p>
+
+<form id="loginForm" onsubmit="loginUser(event)">
+<label>Email</label>
+<input id="loginEmail" type="email" required>
+
+<label>Password</label>
+<input id="loginPassword" type="password" required>
+
+<button type="submit" id="loginBtn" class="primary">Login</button>
+</form>
+
+<p id="loginMsg" class="message"></p>
+<p>New user? <span class="link" onclick="showPage('register')">Register here</span></p>
+</div>
+</div>
+
+<div id="register" class="page hidden">
+<div class="auth form-panel">
+<h2>Create account</h2>
+<p>Create your TNSTC account.</p>
+
+<form id="registerForm" onsubmit="registerUser(event)">
+<label>Full name</label>
+<input id="regName" required>
+
+<label>Email</label>
+<input id="regEmail" type="email" required>
+
+<label>Password</label>
+<input id="regPassword" type="password" minlength="6" required>
+
+<button type="submit" id="regBtn" class="primary">Register</button>
+</form>
+
+<p id="registerMsg" class="message"></p>
+<p>Already registered? <span class="link" onclick="showPage('login')">Login here</span></p>
+</div>
+</div>
+
+</main>
+</div>
+</section>
+
+<script>
+// --- BUS DATA ---
+const mainBuses = [
+    { routeNo: "001A", route: "Thuthur - Tan Old B.S", services: "1", duration: "2.00" },
+    { routeNo: "002A", route: "Lalgudi - Tan Old B.S", services: "1", duration: "2.10" },
+    { routeNo: "076A", route: "C.P.C. - Thiruvaiyaru", services: "1", duration: "2.35" },
+    { routeNo: "301A", route: "Trichy - Pallapatti", services: "2", duration: "3.25" },
+    { routeNo: "321A", route: "Trichy - D.Edayapatti", services: "1", duration: "2.30" },
+    { routeNo: "323A", route: "Trichy - Manapparai", services: "1", duration: "1.00" },
+    { routeNo: "401A", route: "Trichy - Chinnappallipalayam", services: "1", duration: "2.30" },
+    { routeNo: "405A", route: "Trichy - Dindugul", services: "1", duration: "2.10" },
+    { routeNo: "406B", route: "Trichy - Mettupalayam", services: "2", duration: "2.15" },
+    { routeNo: "542B", route: "Thuraiyur - Tan New B.S", services: "1", duration: "3.50" },
+    { routeNo: "576G", route: "Ariyalur - Trichy", services: "8", duration: "3.20" },
+    { routeNo: "805A", route: "Karur - Trichy", services: "1", duration: "2.10" },
+    { routeNo: "900AA", route: "Trichy - Madurai", services: "Multiple", duration: "3.00" },
+    { routeNo: "905B", route: "Trichy - Palani", services: "15", duration: "4.00" },
+    { routeNo: "908AB", route: "Trichy - Chennai", services: "15", duration: "7.00" },
+    { routeNo: "909AA", route: "Trichy - Coimbatore", services: "28", duration: "5.25" },
+    { routeNo: "910AA", route: "Trichy - Erode", services: "16", duration: "4.15" },
+    { routeNo: "911C", route: "Trichy - Tiruppur", services: "14", duration: "4.20" },
+    { routeNo: "914Z", route: "Trichy - Salem", services: "43", duration: "3.25" },
+    { routeNo: "927A", route: "Trichy - Namakkal", services: "3", duration: "2.15" }
+];
+
+const localBuses = [
+    {routeNo:"1", from:"Central Bus Stand", to:"Chatram Bus Stand", frequency:"Every 30 mins", firstLast:"04:00 - 23:45"},
+    {routeNo:"1A", from:"Central Bus Stand", to:"Srirangam", frequency:"Every 30 mins", firstLast:"04:30 - 22:30"},
+    {routeNo:"12", from:"Chatram Bus Stand", to:"Tiruchirapalli Airport", frequency:"Every 30 mins", firstLast:"05:00 - 22:00"},
+    {routeNo:"15", from:"Central Bus Stand", to:"Thuvakudi / NIT", frequency:"Every 30 mins", firstLast:"04:30 - 22:30"},
+    {routeNo:"45", from:"Chatram Bus Stand", to:"Samayapuram", frequency:"Every 30 mins", firstLast:"05:00 - 21:30"},
+    {routeNo:"78", from:"Central Bus Stand", to:"BHEL", frequency:"Every 30 mins", firstLast:"04:30 - 22:00"},
+    {routeNo:"99", from:"Chatram Bus Stand", to:"Rockfort / Gandhi Market", frequency:"Every 30 mins", firstLast:"04:00 - 23:00"},
+    {routeNo:"110", from:"Central Bus Stand", to:"Vayalur", frequency:"Every 30 mins", firstLast:"05:15 - 21:15"}
+];
+
+document.getElementById('mainRouteCount').textContent = mainBuses.length;
+document.getElementById('localRouteCount').textContent = localBuses.length;
+
+const pageTitle = {
+    "home": ["Home dashboard", "Travel information for Tiruchirapalli."],
+    "map": ["Live GPS tracking", "Live locations of active TNSTC buses."],
+    "timings": ["Bus timings", "Main and local services from Trichy."],
+    "main-routes": ["Main Routes", "Extensive list of main routes based on official data."],
+    "local-routes": ["Local Routes", "Urban and suburban TNSTC routes within Tiruchirapalli."],
+    "login": ["Login", "Access your TNSTC account."],
+    "register": ["Create account", "Register to save your preferred routes."],
+    "search-results": ["Search Results", "Your custom bus route itinerary."]
+};
+
+function toggleDropdown(event, id) {
+    event.preventDefault();
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+    event.currentTarget.classList.toggle('dropdown-open');
+}
+
+function showPage(name) {
+    document.getElementById("welcome").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+
+    document.querySelectorAll(".nav").forEach(nav => nav.classList.remove("active"));
+    const activeNav = document.querySelector(`.nav[data-target="${name}"]`);
+    if(activeNav) activeNav.classList.add("active");
+
+    document.querySelectorAll(".page").forEach(page => page.classList.add("hidden"));
+    document.getElementById(name === "map" ? "mapPage" : name).classList.remove("hidden");
+
+    document.getElementById("title").textContent = pageTitle[name][0];
+    document.getElementById("subtitle").textContent = pageTitle[name][1];
+}
+
+// --- SEARCH LOGIC ---
+function performSearch() {
+    const fromVal = document.getElementById('searchFrom').value.toLowerCase().trim();
+    const toVal = document.getElementById('searchTo').value.toLowerCase().trim();
+
+    if (!fromVal && !toVal) {
+        alert("Please enter a 'From' or 'To' location to search.");
+        return;
+    }
+
+    // Filter Main Routes (Bidirectional String Match)
+    const filteredMain = mainBuses.filter(bus => {
+        const routeStr = bus.route.toLowerCase();
+        const matchFrom = fromVal ? routeStr.includes(fromVal) : true;
+        const matchTo = toVal ? routeStr.includes(toVal) : true;
+        return matchFrom && matchTo;
+    });
+
+    // Filter Local Routes (Bidirectional String Match)
+    const filteredLocal = localBuses.filter(bus => {
+        const routeStr = (bus.from + " " + bus.to).toLowerCase();
+        const matchFrom = fromVal ? routeStr.includes(fromVal) : true;
+        const matchTo = toVal ? routeStr.includes(toVal) : true;
+        return matchFrom && matchTo;
+    });
+
+    let html = "";
+    if (filteredMain.length === 0 && filteredLocal.length === 0) {
+        html = "<p style='color:#bd3030; font-weight:bold;'>No buses found matching your search criteria. Please try different locations.</p>";
+    } else {
+        html += filteredMain.map(bus => `
+            <div class="route">
+            <span class="eta">${bus.duration} Hrs</span>
+            <b>Route ${bus.routeNo}: ${bus.route}</b>
+            <small>Number of Services: ${bus.services}<br>Journey Time: ${bus.duration} Hours</small>
+            <span class="bus-type">Main Route</span>
+            </div>
+        `).join("");
+
+        html += filteredLocal.map(bus => `
+            <div class="route">
+            <span class="eta">${bus.frequency}</span>
+            <b>Route ${bus.routeNo}: ${bus.from} → ${bus.to}</b>
+            <small>Frequency: ${bus.frequency}<br>First and last bus: ${bus.firstLast}</small>
+            <span class="bus-type">Local Bus</span>
+            </div>
+        `).join("");
+    }
+
+    document.getElementById('searchResultsList').innerHTML = html;
+    
+    // Build Title
+    const fromText = fromVal ? fromVal.charAt(0).toUpperCase() + fromVal.slice(1) : "Any";
+    const toText = toVal ? toVal.charAt(0).toUpperCase() + toVal.slice(1) : "Any";
+    document.getElementById('searchTitle').textContent = `${fromText} → ${toText}`;
+    
+    // Reveal search tab in sidebar
+    document.getElementById('nav-search').classList.remove('hidden');
+
+    showPage('search-results');
+}
+
+
+function displayBusData() {
+    const mainHtml = mainBuses.map(bus => `
+        <div class="route">
+        <span class="eta">${bus.duration} Hrs</span>
+        <b>Route ${bus.routeNo}: ${bus.route}</b>
+        <small>Number of Services: ${bus.services}<br>Journey Time: ${bus.duration} Hours</small>
+        <span class="bus-type">Main Route</span>
+        </div>
+    `).join("");
+
+    const localHtml = localBuses.map(bus => `
+        <div class="route">
+        <span class="eta">${bus.frequency}</span>
+        <b>Route ${bus.routeNo}: ${bus.from} → ${bus.to}</b>
+        <small>Frequency: ${bus.frequency}<br>First and last bus: ${bus.firstLast}</small>
+        <span class="bus-type">Local Bus</span>
+        </div>
+    `).join("");
+
+    document.getElementById("mainTimingsView").innerHTML = mainHtml;
+    document.getElementById("mainRoutesList").innerHTML = mainHtml;
+    
+    document.getElementById("localTimingsView").innerHTML = localHtml;
+    document.getElementById("localRoutesList").innerHTML = localHtml;
+}
+
+// --- DATABASE API MOCK ---
+const DatabaseAPI = {
+    async register(name, email, password) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const existingUser = localStorage.getItem("db_user_" + email);
+                if (existingUser) {
+                    reject("Email already registered in the database.");
+                } else {
+                    const user = { name, email, password };
+                    localStorage.setItem("db_user_" + email, JSON.stringify(user));
+                    resolve(user);
+                }
+            }, 800);
+        });
+    },
+    
+    async login(email, password) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const userString = localStorage.getItem("db_user_" + email);
+                if (userString) {
+                    const user = JSON.parse(userString);
+                    if (user.password === password) resolve(user);
+                    else reject("Incorrect password.");
+                } else {
+                    reject("Account not found.");
+                }
+            }, 800);
+        });
+    }
+};
+
+// --- AUTHENTICATION LOGIC ---
+async function registerUser(event) {
+    event.preventDefault();
+    const btn = document.getElementById("regBtn");
+    const msg = document.getElementById("registerMsg");
+    
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPassword").value;
+
+    btn.textContent = "Connecting to database...";
+    btn.classList.add("btn-loader");
+    btn.disabled = true;
+
+    try {
+        const user = await DatabaseAPI.register(name, email, password);
+        msg.style.color = "#16804b";
+        msg.textContent = "Account successfully saved to database!";
+        document.getElementById("account").textContent = "👤 " + user.name;
+        document.getElementById("registerForm").reset();
+        setTimeout(() => showPage('home'), 1000);
+    } catch (error) {
+        msg.style.color = "#bd3030";
+        msg.textContent = error;
+    } finally {
+        btn.textContent = "Register";
+        btn.classList.remove("btn-loader");
+        btn.disabled = false;
+    }
+}
+
+async function loginUser(event) {
+    event.preventDefault();
+    const btn = document.getElementById("loginBtn");
+    const msg = document.getElementById("loginMsg");
+    
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    btn.textContent = "Authenticating...";
+    btn.classList.add("btn-loader");
+    btn.disabled = true;
+
+    try {
+        const user = await DatabaseAPI.login(email, password);
+        msg.style.color = "#16804b";
+        msg.textContent = "Login successful!";
+        document.getElementById("account").textContent = "👤 " + user.name;
+        document.getElementById("loginForm").reset();
+        setTimeout(() => showPage('home'), 1000);
+    } catch (error) {
+        msg.style.color = "#bd3030";
+        msg.textContent = error;
+    } finally {
+        btn.textContent = "Login";
+        btn.classList.remove("btn-loader");
+        btn.disabled = false;
+    }
+}
+
+displayBusData();
+</script>
+
+</body>
+</html>
